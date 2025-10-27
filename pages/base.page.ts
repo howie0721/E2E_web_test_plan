@@ -21,13 +21,14 @@ export class BasePage {
             'button[aria-label="關閉"]',
             'button:has-text("今日不再顯示")',
             'button:has-text("關閉")',
+            '#pets-portal-provider-0 button', // 雙十一 popup 關閉按鈕
         ];
 
         for (const selector of popupSelectors) {
             const popup = this.page.locator(selector);
-            if (await popup.isVisible().catch(() => false)) {
+            if (await popup.isVisible({ timeout: 1000 }).catch(() => false)) {
                 await popup.click().catch(() => {});
-                await this.page.waitForTimeout(300);
+                await this.page.waitForTimeout(500);
                 break;
             }
         }

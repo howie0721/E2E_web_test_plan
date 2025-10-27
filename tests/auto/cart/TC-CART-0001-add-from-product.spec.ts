@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
-import { CartPage } from '../../pages/cart.page';
-import { HomePage } from '../../pages/home.page';
-import { ProductPage } from '../../pages/product.page';
+import { CartPage } from '../../../pages/cart.page';
+import { HomePage } from '../../../pages/home.page';
+import { ProductPage } from '../../../pages/product.page';
 
 const storageStatePath = 'fixtures/authStorageState.json';
 test.use({ storageState: storageStatePath });

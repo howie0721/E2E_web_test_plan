@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
-import accounts from '../../fixtures/test-accounts.json';
-import { LoginPage } from '../../pages/login.page';
+import accounts from '../../../fixtures/test-accounts.json';
+import { LoginPage } from '../../../pages/login.page';
 
 const storageStatePath = 'fixtures/authStorageState.json';
 

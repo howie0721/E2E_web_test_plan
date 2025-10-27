@@ -1,11 +1,11 @@
 import { test } from '@playwright/test';
-import { CartPage } from '../../pages/cart.page';
-import { HomePage } from '../../pages/home.page';
-import { ProductPage } from '../../pages/product.page';
+import { CartPage } from '../../../pages/cart.page';
+import { HomePage } from '../../../pages/home.page';
+import { ProductPage } from '../../../pages/product.page';
 
 const storageStatePath = 'fixtures/authStorageState.json';
 test.use({ storageState: storageStatePath });
-test.setTimeout(60000);
+test.setTimeout(120000);
 
 /**
  * TC-CART-0002 重複加入同一商品

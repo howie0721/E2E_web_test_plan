@@ -28,17 +28,18 @@ export class HomePage extends BasePage {
         await this.closePopup();
         await this.page.locator(this.productLinkSelector).first().waitFor({ state: 'visible' });
         const productLinks = await this.page.locator(this.productLinkSelector).all();
-        
+
         if (productLinks.length === 0) {
             throw new Error('找不到商品連結');
         }
-        
+
         if (productLinks.length <= index) {
             throw new Error(`商品索引超出範圍。總商品數：${productLinks.length}，請求索引：${index}`);
         }
-        
+
+        await this.closePopup(); // click 前再檢查一次
         await productLinks[index].click();
-        await this.page.waitForTimeout(8000);
-        await this.closePopup();
+        await this.page.waitForTimeout(500); // 改為短暫等待
+        await this.closePopup(); // click 後再檢查一次
     }
 }
