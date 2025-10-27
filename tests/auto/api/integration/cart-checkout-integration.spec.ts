@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { createApiClient } from '../../../helpers/apiClient';
-import tokens from '../../../fixtures/api-tokens.json';
+import { createApiClient } from '../../../../helpers/apiClient';
+import tokens from '../../../../fixtures/api-tokens.json';
 
 /**
  * Integration Test: 完整購物流程

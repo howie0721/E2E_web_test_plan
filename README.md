@@ -21,54 +21,71 @@
 專案採用**分層架構**設計，確保高內聚、低耦合，便於維護與擴充。
 
 ```
-Shepherdtech_Interview_final/
-├── docs/                          # 測試計畫與文件
-│   ├── api-test-plan.md          # API 測試規劃
-│   ├── blackbox-test-plan.md     # 黑箱測試計畫
-│   ├── cart-coupon-test-plan.md  # 購物車與優惠券測試
-│   └── testcases.md              # 測試案例清單
-├── fixtures/                      # 測試資料與認證狀態
-│   ├── authStorageState.json    # 手機登入認證狀態
-│   ├── authStorageStateLine.json # LINE 登入認證狀態
-│   ├── api-tokens.json           # API 測試用 tokens
-│   └── test-accounts.json        # 測試帳號資訊
-├── helpers/                       # 共用輔助函式
-│   ├── apiClient.ts              # API 客戶端封裝
-│   ├── addProductByIndex.ts      # 商品加入購物車
-│   ├── assertCartItemCount.ts    # 購物車數量驗證
-│   ├── clearCart.ts              # 清空購物車
-│   ├── closePopup.ts             # 關閉彈窗
-│   └── selectSpecsAndAddToCart.ts # 選擇規格並加入購物車
-├── pages/                         # Page Object Model
-│   └── login.page.ts             # 登入頁面物件
-├── tests/                         # 測試案例
-│   ├── cart/                     # 購物車測試
-│   │   ├── TC-CART-0001-add-from-product.spec.ts
-│   │   ├── TC-CART-0002-add-multiple.spec.ts
-│   │   ├── TC-CART-0003-add-different-products.spec.ts
-│   │   ├── TC-CART-0004-persist-after-login.spec.ts
-│   │   └── TC-CART-0005-add-without-login.spec.ts
-│   ├── login/                    # 登入測試
-│   │   ├── auth.spec.ts          # 認證狀態產生
-│   │   ├── TC-LOGIN-0001-success.spec.ts
-│   │   ├── TC-LOGIN-0002-invalid-otp.spec.ts
-│   │   ├── TC-LOGIN-0003-empty-fields.spec.ts
-│   │   ├── TC-LOGIN-0101-line-success.spec.ts
-│   │   └── TC-LOGIN-0501-session-persist.spec.ts
-│   └── api/                      # API 測試
-│       ├── auth/                 # 會員/權限 API
-│       │   └── auth-api.spec.ts
-│       ├── cart/                 # 購物車 API
-│       │   ├── cart-api.spec.ts
-│       │   ├── cart-coupon-api.spec.ts
-│       │   └── cart-user-api.spec.ts
-│       ├── checkout/             # 結帳 API
-│       │   └── checkout-api.spec.ts
-│       └── integration/          # 跨 API 整合測試
-│           └── cart-checkout-integration.spec.ts
-├── playwright.config.ts           # Playwright 設定檔
-└── package.json                   # 專案依賴與腳本
-
+dogcatstar_E2E_test_plan/
+├── docs/
+│   ├── ai-collab-plan.md
+│   ├── api-test-plan.md
+│   ├── blackbox-test-plan.md
+│   ├── cart-coupon-test-plan.md
+│   ├── e2e-stubbing-plan.md
+│   ├── Playwright_Test_Plan.md
+│   ├── presentation_flow.md
+│   ├── Task.md
+│   └── testcases.md
+├── fixtures/
+│   ├── authStorageState.json.example
+│   ├── api-tokens.json.example
+│   └── test-accounts.json.example
+├── helpers/
+│   └── apiClient.ts
+├── pages/
+│   ├── base.page.ts
+│   ├── cart.page.ts
+│   ├── login.page.ts
+│   ├── home.page.ts
+│   └── product.page.ts
+├── tests/
+│   ├── auto/                      # 自動化測試
+│   │   ├── api/                   # API 測試
+│   │   │   ├── README.md
+│   │   │   ├── auth/
+│   │   │   │   ├── TC-API-AUTH-001-no-token.spec.ts
+│   │   │   │   └── TC-API-AUTH-002-invalid-token.spec.ts
+│   │   │   ├── cart/
+│   │   │   │   ├── TC-API-CART-001-cart-cache.spec.ts
+│   │   │   │   ├── TC-API-CART-002-missing-token.spec.ts
+│   │   │   │   ├── TC-API-CART-003-first-purchase.spec.ts
+│   │   │   │   ├── TC-API-CART-004-calculate-checkout.spec.ts
+│   │   │   │   ├── TC-API-CART-005-available-coupons.spec.ts
+│   │   │   │   ├── TC-API-CART-006-missing-token.spec.ts
+│   │   │   │   ├── TC-API-USER-001-user-address.spec.ts
+│   │   │   │   └── TC-API-USER-002-missing-token.spec.ts
+│   │   │   ├── checkout/
+│   │   │   │   ├── TC-API-CHECKOUT-001-calculate-success.spec.ts
+│   │   │   │   ├── TC-API-CHECKOUT-002-missing-fields.spec.ts
+│   │   │   │   └── TC-API-CHECKOUT-003-no-token.spec.ts
+│   │   │   └── integration/
+│   │   │       └── cart-checkout-integration.spec.ts
+│   │   ├── cart/                  # 購物車 E2E 測試
+│   │   │   ├── TC-CART-0001-add-from-product.spec.ts
+│   │   │   ├── TC-CART-0002-add-multiple.spec.ts
+│   │   │   ├── TC-CART-0003-add-different-products.spec.ts
+│   │   │   ├── TC-CART-0004-persist-after-login.spec.ts
+│   │   │   └── TC-CART-0005-add-without-login.spec.ts
+│   │   └── login/                 # 登入 E2E 測試
+│   │       ├── auth.spec.ts
+│   │       ├── TC-LOGIN-0001-invalid-otp.spec.ts
+│   │       ├── TC-LOGIN-0002-empty-fields.spec.ts
+│   │       ├── TC-LOGIN-0003-google-login-semi-auto.spec.ts
+│   │       ├── TC-LOGIN-0004-email-fail.spec.ts
+│   │       └── TC-LOGIN-0005-session-persist.spec.ts
+│   └── manual/                    # 需人工驗證的測試
+│       ├── TC-LOGIN-MANUAL-0001-phone-login.spec.ts
+│       ├── TC-LOGIN-MANUAL-0002-line-login.spec.ts
+│       ├── TC-LOGIN-MANUAL-0003-facebook-login.spec.ts
+│       └── TC-LOGIN-MANUAL-0004-email-login.spec.ts
+├── playwright.config.ts
+└── package.json
 ```
 
 ---
