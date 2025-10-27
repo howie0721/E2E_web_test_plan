@@ -110,15 +110,23 @@ npx playwright install
 ### 環境設定
 
 1. **測試帳號設定**  
-   請參考 `fixtures/test-accounts.json.example`，建立 `fixtures/test-accounts.json` 並填入測試帳號資訊。
+   複製範例檔案並填入測試帳號資訊：
+   ```bash
+   cp fixtures/test-accounts.json.example fixtures/test-accounts.json
+   cp fixtures/api-tokens.json.example fixtures/api-tokens.json
+   cp fixtures/authStorageState.json.example fixtures/authStorageState.json
+   ```
+   然後編輯這些檔案，填入你的測試帳號資訊。
 
 2. **API Token 設定**  
-   請參考 `fixtures/api-tokens.json`，填入有效的 `api-token` 與 `x-platform-token`（可從瀏覽器開發者工具取得）。
+   編輯 `fixtures/api-tokens.json`，填入有效的 `accessToken` 與 `refreshToken`（可從瀏覽器開發者工具取得）。
 
 3. **產生認證狀態**  
    ```bash
    npx playwright test tests/login/auth.spec.ts
    ```
+
+   **注意**：`fixtures/` 目錄下的敏感資料文件已加入 `.gitignore`，不會被提交到 git。
 
 ---
 

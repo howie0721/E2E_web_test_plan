@@ -6,3 +6,8 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Sensitive data - keep local only
+fixtures/test-accounts.json
+fixtures/authStorageState.json
+fixtures/api-tokens.json
