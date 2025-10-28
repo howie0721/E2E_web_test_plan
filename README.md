@@ -14,12 +14,15 @@
 - [測試報告](#測試報告)
 - [設計理念](#設計理念)
 - [未來擴充方向](#未來擴充方向)
+- [貢獻指南](#貢獻指南)
+- [授權](#授權)
+- [聯絡方式](#聯絡方式)
 
 ---
 
 ## 🏗️ 專案架構
 
-專案採用**分層架構**設計，確保高內聚、低耦合，便於維護與擴充。詳細架構說明請參考 [Project Architecture.md](./docs/Test_System_Architecture/Project%20Architecture.md)。
+專案採用**分層架構**設計，確保高內聚、低耦合，便於維護與擴充。詳細架構說明請參考 [Project Architecture.md](./docs/Test_System_Architecture/Project_Architecture.md)。
 
 ```
 dogcatstar_E2E_test_plan/
@@ -33,7 +36,7 @@ dogcatstar_E2E_test_plan/
 │   │   ├── cart-coupon-test-plan.md
 │   │   └── e2e-stubbing-plan.md
 │   ├── Test_System_Architecture/              # 測試系統架構文件
-│   │   ├── Project Architecture.md
+│   │   ├── Project_Architecture.md
 │   │   ├── Playwright_Test_Plan.md
 │   │   └── testcases.md
 │   ├── presentation_flow.md
@@ -76,7 +79,7 @@ dogcatstar_E2E_test_plan/
 │   │   ├── cart/                              # 購物車 E2E 測試
 │   │   │   ├── CART-E2E-TEST-REPORT.md
 │   │   │   ├── TC-CART-0001-add-from-product.spec.ts
-│   │   │   ├── TC-CART-0002-add-multiple-v2.spec.ts
+│   │   │   ├── TC-CART-0002-add-multiple.spec.ts
 │   │   │   ├── TC-CART-0003-add-different-products.spec.ts
 │   │   │   ├── TC-CART-0004-persist-after-login.spec.ts
 │   │   │   └── TC-CART-0005-add-without-login.spec.ts
@@ -91,7 +94,7 @@ dogcatstar_E2E_test_plan/
 │       ├── TC-LOGIN-MANUAL-0001-phone-login.spec.ts
 │       ├── TC-LOGIN-MANUAL-0002-line-login.spec.ts
 │       ├── TC-LOGIN-MANUAL-0003-facebook-login.spec.ts
-│       ├── TC-LOGIN-MANUAL-0004-google-login.spec.ts.ts
+│       ├── TC-LOGIN-MANUAL-0004-google-login.spec.ts
 │       └── TC-LOGIN-MANUAL-0005-email-login.spec.ts
 ├── playwright.config.ts
 └── package.json
@@ -148,7 +151,7 @@ npx playwright install
    cp fixtures/api-tokens.json.example fixtures/api-tokens.json
    cp fixtures/authStorageState.json.example fixtures/authStorageState.json
    ```
-   然後編輯這些檔案,填入你的測試帳號資訊。
+   然後編輯這些檔案，填入你的測試帳號資訊。
 
 2. **API Token 設定**  
    編輯 `fixtures/api-tokens.json`，填入有效的 `accessToken` 與 `refreshToken`（可從瀏覽器開發者工具取得）。
@@ -164,9 +167,8 @@ npx playwright install
 
 ## ▶️ 測試執行
 
-### E2E 測試
+### 基本執行
 
-```bash
 ```bash
 # 執行所有自動化測試
 npx playwright test tests/auto
@@ -181,7 +183,11 @@ npx playwright test tests/auto/api/login
 
 # 執行單一測試檔案
 npx playwright test tests/auto/cart/TC-CART-0001-add-from-product.spec.ts
+```
 
+### 進階選項
+
+```bash
 # UI 模式執行（可視化）
 npx playwright test --ui
 
@@ -214,8 +220,9 @@ npx playwright show-report
 
 ## 📝 測試案例說明
 
-### 登入測試 (`tests/login/`)
+### 登入測試 (`tests/auto/login/`)
 
+#### E2E 測試
 | 測試案例 | 說明 | 檔案 |
 |---------|------|------|
 | TC-LOGIN-0001 | 無效 OTP 驗證 | `TC-LOGIN-0001-invalid-otp.spec.ts` |
@@ -235,13 +242,13 @@ npx playwright show-report
 | TC-LOGIN-API-007 | 完整登入流程 | `TC-LOGIN-API-007-complete-flow.spec.ts` |
 | TC-LOGIN-API-008 | 錯誤處理 | `TC-LOGIN-API-008-error-handling.spec.ts` |
 
-### 購物車測試 (`tests/cart/`)
+### 購物車測試 (`tests/auto/cart/`)
 
 #### E2E 測試
 | 測試案例 | 說明 | 檔案 |
 |---------|------|------|
 | TC-CART-0001 | 商品頁加入購物車 | `TC-CART-0001-add-from-product.spec.ts` |
-| TC-CART-0002 | 多次加入同商品 | `TC-CART-0002-add-multiple-v2.spec.ts` |
+| TC-CART-0002 | 多次加入同商品 | `TC-CART-0002-add-multiple.spec.ts` |
 | TC-CART-0003 | 加入不同商品 | `TC-CART-0003-add-different-products.spec.ts` |
 | TC-CART-0004 | 登入後購物車持久化 | `TC-CART-0004-persist-after-login.spec.ts` |
 | TC-CART-0005 | 未登入加入購物車 | `TC-CART-0005-add-without-login.spec.ts` |
@@ -269,6 +276,38 @@ npx playwright show-report
 | TC-LOGIN-MANUAL-0003 | Facebook 登入 | `TC-LOGIN-MANUAL-0003-facebook-login.spec.ts` |
 | TC-LOGIN-MANUAL-0004 | Google 登入 | `TC-LOGIN-MANUAL-0004-google-login.spec.ts` |
 | TC-LOGIN-MANUAL-0005 | Email 登入 | `TC-LOGIN-MANUAL-0005-email-login.spec.ts` |
+
+---
+
+## 📊 測試報告
+
+### Playwright HTML 報告
+
+執行測試後，可透過以下指令查看報告：
+
+```bash
+# 開啟 HTML 報告
+npx playwright show-report
+
+# 報告位置
+playwright-report/index.html
+```
+
+報告包含：
+- 測試執行結果（通過/失敗）
+- 執行時間
+- 錯誤截圖
+- 測試錄影（需設定）
+- Trace 檔案（可上傳至 trace.playwright.dev）
+
+### 測試報告文件
+
+各模組測試執行後都會產生詳細的測試報告：
+
+- **Cart E2E 測試報告**：`tests/auto/cart/CART-E2E-TEST-REPORT.md`
+- **Login E2E 測試報告**：`tests/auto/login/LOGIN-E2E-TEST-REPORT.md`
+- **Cart API 測試報告**：`tests/auto/api/cart/CART-API-TEST-REPORT.md`
+- **Login API 測試報告**：`tests/auto/api/login/LOGIN-API-FINAL-TEST-REPORT.md`
 
 ---
 
@@ -350,100 +389,22 @@ npx playwright show-report
 
 ---
 
-## 📊 測試報告
+## 🤝 貢獻指南
 
-### 執行測試後，可透過以下指令查看報告：
-
-```bash
-# 開啟 HTML 報告
-npx playwright show-report
-
-# 報告位置
-playwright-report/index.html
-```
-
-報告包含：
-- 測試執行結果（通過/失敗）
-- 執行時間
-- 錯誤截圖
-- 測試錄影（需設定）
-- Trace 檔案（可上傳至 trace.playwright.dev）
-
-### 測試報告文件
-
-各模組測試執行後都會產生詳細的測試報告：
-
-- **Cart E2E 測試報告**：`tests/auto/cart/CART-E2E-TEST-REPORT.md`
-- **Login E2E 測試報告**：`tests/auto/login/LOGIN-E2E-TEST-REPORT.md`
-- **Cart API 測試報告**：`tests/auto/api/cart/CART-API-TEST-REPORT.md`
-- **Login API 測試報告**：`tests/auto/api/login/LOGIN-API-FINAL-TEST-REPORT.md`
-
----
-
-## 📝 測試案例說明
-
-### 登入測試 (`tests/auto/login/`)
-
-#### E2E 測試
-| 測試案例 | 說明 | 檔案 |
-|---------|------|------|
-| TC-LOGIN-0001 | 無效 OTP 驗證 | `TC-LOGIN-0001-invalid-otp.spec.ts` |
-| TC-LOGIN-0002 | 空白欄位驗證 | `TC-LOGIN-0002-empty-fields.spec.ts` |
-| TC-LOGIN-0003 | Email 驗證失敗 | `TC-LOGIN-0003-email-fail.spec.ts` |
-| TC-LOGIN-0004 | Session 持久化 | `TC-LOGIN-0004-session-persist.spec.ts` |
-
-#### API 測試
-| 測試案例 | 說明 | 檔案 |
-|---------|------|------|
-| TC-LOGIN-API-001 | 發送 OTP | `TC-LOGIN-API-001-send-otp.spec.ts` |
-| TC-LOGIN-API-002 | 驗證 OTP | `TC-LOGIN-API-002-verify-otp.spec.ts` |
-| TC-LOGIN-API-003 | JWT 登入 | `TC-LOGIN-API-003-jwt-login.spec.ts` |
-| TC-LOGIN-API-004 | 檢查註冊狀態 | `TC-LOGIN-API-004-check-registered.spec.ts` |
-| TC-LOGIN-API-005 | 刷新 Token | `TC-LOGIN-API-005-refresh-token.spec.ts` |
-| TC-LOGIN-API-006 | 取得用戶資訊 | `TC-LOGIN-API-006-get-user-info.spec.ts` |
-| TC-LOGIN-API-007 | 完整登入流程 | `TC-LOGIN-API-007-complete-flow.spec.ts` |
-| TC-LOGIN-API-008 | 錯誤處理 | `TC-LOGIN-API-008-error-handling.spec.ts` |
-
-### 購物車測試 (`tests/auto/cart/`)
-
-#### E2E 測試
-| 測試案例 | 說明 | 檔案 |
-|---------|------|------|
-| TC-CART-0001 | 商品頁加入購物車 | `TC-CART-0001-add-from-product.spec.ts` |
-| TC-CART-0002 | 多次加入同商品 | `TC-CART-0002-add-multiple-v2.spec.ts` |
-| TC-CART-0003 | 加入不同商品 | `TC-CART-0003-add-different-products.spec.ts` |
-| TC-CART-0004 | 登入後購物車持久化 | `TC-CART-0004-persist-after-login.spec.ts` |
-| TC-CART-0005 | 未登入加入購物車 | `TC-CART-0005-add-without-login.spec.ts` |
-
-#### API 測試
-| 測試案例 | 說明 | 檔案 |
-|---------|------|------|
-| TC-CART-API-001 | 首購狀態檢查 | `TC-CART-API-001-first-purchase-check.spec.ts` |
-| TC-CART-API-002 | 購物車快取查詢 | `TC-CART-API-002-cart-cache-query.spec.ts` |
-| TC-CART-API-003 | 購物車計算 | `TC-CART-API-003-cart-calculate.spec.ts` |
-| TC-CART-API-004 | 訪客折扣 | `TC-CART-API-004-guest-discount.spec.ts` |
-| TC-CART-API-005 | 可用優惠券 | `TC-CART-API-005-available-coupons.spec.ts` |
-| TC-CART-API-006 | 結帳欄位驗證 | `TC-CART-API-006-checkout-fields.spec.ts` |
-| TC-CART-API-007 | 用戶地址資訊 | `TC-CART-API-007-user-address.spec.ts` |
-| TC-CART-API-008 | 完整購物流程 | `TC-CART-API-008-complete-flow.spec.ts` |
-
-### 手動測試 (`tests/manual/`)
-
-這些測試需要人工介入（如輸入真實 OTP、OAuth 授權等）：
-
-| 測試案例 | 說明 | 檔案 |
-|---------|------|------|
-| TC-LOGIN-MANUAL-0001 | 手機號碼登入 | `TC-LOGIN-MANUAL-0001-phone-login.spec.ts` |
-| TC-LOGIN-MANUAL-0002 | LINE 登入 | `TC-LOGIN-MANUAL-0002-line-login.spec.ts` |
-| TC-LOGIN-MANUAL-0003 | Facebook 登入 | `TC-LOGIN-MANUAL-0003-facebook-login.spec.ts` |
-| TC-LOGIN-MANUAL-0004 | Google 登入 | `TC-LOGIN-MANUAL-0004-google-login.spec.ts` |
-| TC-LOGIN-MANUAL-0005 | Email 登入 | `TC-LOGIN-MANUAL-0005-email-login.spec.ts` |
+歡迎貢獻測試案例或改進建議！請遵循以下步驟：
 
 1. Fork 本專案
 2. 建立功能分支 (`git checkout -b feature/new-test`)
 3. 提交變更 (`git commit -m 'Add new test case'`)
 4. 推送至分支 (`git push origin feature/new-test`)
 5. 發起 Pull Request
+
+### 貢獻規範
+
+- 遵循現有的命名規範 (`TC-<模組>-<編號>-<描述>`)
+- 為新測試案例撰寫清晰的註解
+- 確保測試可獨立執行且穩定通過
+- 更新相關文件（如測試案例清單、README）
 
 ---
 
@@ -456,8 +417,8 @@ playwright-report/index.html
 ## 📞 聯絡方式
 
 如有任何問題或建議，歡迎聯絡：
-- **Email**: [howie0721@gmail.com]
-- **GitHub**: [howie0721]
+- **Email**: howie0721@gmail.com
+- **GitHub**: [howie0721](https://github.com/howie0721)
 
 ---
 
