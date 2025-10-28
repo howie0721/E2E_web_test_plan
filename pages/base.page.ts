@@ -17,19 +17,24 @@ export class BasePage {
      */
     async closePopup() {
         const popupSelectors = [
-            'button[data-testid="popup-dont-show"]',
+            'button[data-testid="popup-close-button"]',  // 右上角 X 按鈕（優先）
+            'button[data-testid="popup-dont-show"]',     // 左下角「今日不再顯示」按鈕
             'button[aria-label="關閉"]',
-            'button:has-text("今日不再顯示")',
             'button:has-text("關閉")',
-            '#pets-portal-provider-0 button', // 雙十一 popup 關閉按鈕
+            '[data-testid="popup-close-button"]',         // 防止有非 button 的 close
+            '[data-testid="popup-dont-show"]'
         ];
 
         for (const selector of popupSelectors) {
-            const popup = this.page.locator(selector);
+            const popup = this.page.locator(selector).first();
             if (await popup.isVisible({ timeout: 1000 }).catch(() => false)) {
-                await popup.click().catch(() => {});
-                await this.page.waitForTimeout(500);
-                break;
+                // 僅點擊 tagName 為 BUTTON 的元素，避免誤點 <a>
+                const tagName = await popup.evaluate(el => el.tagName).catch(() => '');
+                if (tagName && tagName.toUpperCase() === 'BUTTON') {
+                    await popup.click({ force: true }).catch(() => {});
+                    await this.page.waitForTimeout(500);
+                    break;
+                }
             }
         }
     }

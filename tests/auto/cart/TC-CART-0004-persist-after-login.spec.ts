@@ -54,6 +54,10 @@ test('TC-CART-0004 登入後購物車狀態保留', async ({ browser }) => {
 
     // 4. 導航到購物車並驗證商品仍然存在
     await cartPage2.navigate();
+    // 主動關閉彈窗，避免 popup 擋住後續驗證
+    if (typeof cartPage2.closePopup === 'function') {
+        await cartPage2.closePopup();
+    }
     await page2.waitForTimeout(2000); // 等待購物車同步
 
     // 5. 驗證登入後購物車商品數量仍為 1

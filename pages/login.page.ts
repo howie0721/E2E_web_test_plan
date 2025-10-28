@@ -50,6 +50,8 @@ export class LoginPage {
    */
   async fillEmail(email: string) {
     await this.page.fill('input[name="email"]', email);
+    // 填寫 email 後等待 0.5 秒，確保 UI 狀態同步
+    await this.page.waitForTimeout(2000);
   }
 
   /**
@@ -72,7 +74,15 @@ export class LoginPage {
    * 支援手機與 Email 登入的 OTP 輸入
    */
   async fillOTP(otp: string) {
-    await this.page.waitForSelector('input[type="tel"]', { state: 'visible', timeout: 10000 });
+    try {
+      // 拉長等待時間，並多次重試
+      await this.page.waitForSelector('input[type="tel"]', { state: 'visible', timeout: 20000 });
+    } catch (e) {
+      await this.page.screenshot({ path: `otp-input-not-found-${Date.now()}.png`, fullPage: true });
+      throw new Error('找不到 OTP 輸入框，請檢查前置流程或網路狀態。');
+    }
+    // 額外等待 300ms，確保動畫或轉場完成
+    await this.page.waitForTimeout(300);
     const otpInputs = await this.page.locator('input[type="tel"]').all();
     const digits = otp.split('');
     for (let i = 0; i < otpInputs.length && i < digits.length; i++) {

@@ -11,3 +11,7 @@ node_modules/
 fixtures/test-accounts.json
 fixtures/authStorageState.json
 fixtures/api-tokens.json
+
+# Interview answer document - keep local only
+docs/answer.md
+docs/presentation_flow.md

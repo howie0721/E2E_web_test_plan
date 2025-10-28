@@ -5,12 +5,12 @@ import { LoginPage } from '../../../pages/login.page';
 test.setTimeout(120000);
 
 /**
- * TC-LOGIN-0402 Email 驗證失敗
+ * TC-LOGIN-0003 Email 驗證失敗
  * 測試情境：使用 Email 登入後，輸入錯誤的 OTP 驗證碼
  * 預期結果：顯示「驗證碼過期，請重新傳送驗證碼！」錯誤訊息
  * 註：此測試已優化按鈕點擊穩定性，可連續多次執行
  */
-test('TC-LOGIN-0402 Email 驗證失敗', async ({ page }) => {
+test('TC-LOGIN-0003 Email 驗證失敗', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();
   

@@ -28,8 +28,15 @@ test('TC-CART-0001 從商品頁加入購物車', async ({ page }) => {
     await homePage.navigate();
     await homePage.clickProductByIndex(0);
 
+
     // 3. 選擇規格並加入購物車
     await productPage.selectSpecsAndAddToCart();
+    // 加強：加入購物車後立即關閉 popup，避免擋住購物車按鈕
+    if (typeof productPage.closePopup === 'function') {
+        await productPage.closePopup();
+    } else if (typeof cartPage.closePopup === 'function') {
+        await cartPage.closePopup();
+    }
 
     // 4. 驗證購物車內商品數量正確
     await cartPage.verifyItemCount(1);

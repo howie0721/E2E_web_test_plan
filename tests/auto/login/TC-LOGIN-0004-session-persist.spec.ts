@@ -4,7 +4,7 @@ import { LoginPage } from '../../../pages/login.page';
 test.setTimeout(120000);
 
 /**
- * TC-LOGIN-0501 登入狀態持久化（storageState 還原）
+ * TC-LOGIN-0004 登入狀態持久化（storageState 還原）
  * 測試情境：
  *   1. 建立乾淨的 context，驗證未登入狀態（應看到「登入/註冊」按鈕）
  *   2. 使用已儲存的 storageState 建立新 context，模擬已登入使用者
@@ -12,7 +12,7 @@ test.setTimeout(120000);
  * 預期結果：storageState 能正確還原登入狀態，無需重新登入
  * 用途：測試 session 持久化機制，確保使用者登入狀態可跨瀏覽器 context 保存
  */
-test('TC-LOGIN-0501 登入狀態持久化（storageState 還原）', async ({ browser }) => {
+test('TC-LOGIN-0004 登入狀態持久化（storageState 還原）', async ({ browser }) => {
   // 1) 建立乾淨的 context，確認未登入
   const cleanCtx = await browser.newContext();
   const cleanPage = await cleanCtx.newPage();

@@ -28,8 +28,10 @@ export class CartPage extends BasePage {
      * 清空購物車內所有商品
      */
     async clearCart() {
-        await this.navigate();
-        await this.closePopup();
+    await this.navigate();
+    await this.closePopup();
+    // 關閉 popup 後，將滑鼠移到左上角，避免 hover menu 蓋住按鈕
+    await this.page.mouse.move(0, 0);
         
         // 關閉可能阻擋的 portal 元素
         const portalOverlay = this.page.locator('#pets-portal-provider-0');
@@ -63,15 +65,18 @@ export class CartPage extends BasePage {
             if (await portal.count() > 0) {
                 await portal.evaluate(el => el.remove()).catch(() => {});
             }
-            
+
+            // 每次嘗試前都把滑鼠移到左上角，避免 hover menu 蓋住移除按鈕
+            await this.page.mouse.move(0, 0);
+
             const removeBtnSelector = this.page.locator(this.removeButtonSelector);
             const isVisible = await removeBtnSelector.first().isVisible().catch(() => false);
-            
+
             if (!isVisible) {
                 // 沒有更多移除按鈕了
                 break;
             }
-            
+
             // 使用 force click 來繞過覆蓋檢查
             await removeBtnSelector.first().click({ force: true });
             await this.page.waitForTimeout(500);

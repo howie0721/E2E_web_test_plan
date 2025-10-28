@@ -81,6 +81,8 @@ export class ProductPage extends BasePage {
      */
     async selectSpecsAndAddToCart() {
         await this.waitForPageLoad();
+        // 進入商品頁面後多等5秒，確保規格載入完成
+        await this.page.waitForTimeout(5000);
         await this.selectFirstAvailableSpecs();
         await this.clickAddToCart();
     }

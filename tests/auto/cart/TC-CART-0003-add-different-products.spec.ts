@@ -22,7 +22,8 @@ test('TC-CART-0003 加入多個不同商品', async ({ page }) => {
     const homePage = new HomePage(page);
     const productPage = new ProductPage(page);
 
-    // 1. 清空購物車
+    // 1. 清空購物車前，先把滑鼠移到左上角，避免 hover menu 蓋住按鈕
+    await page.mouse.move(0, 0);
     await cartPage.clearCart();
 
     // 2. 加入第一個商品
