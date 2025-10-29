@@ -499,15 +499,26 @@ export class CouponFactory {
 #### 範例：Mock 優惠券 API
 ```typescript
 // helpers/couponApiStub.ts
+// Mock 優惠券 API，根據不同情境 scenario 回傳對應結果
+// @param page Playwright Page 物件
+// @param scenario 'empty' | 'timeout' | 'error' | 其他
+//   - 'empty'   ：回傳空優惠券清單
+//   - 'timeout' ：模擬 API 請求逾時（30 秒）
+//   - 'error'   ：回傳 500 錯誤
+//   - 其他      ：正常通過，不攔截
 export async function mockCouponAPI(page: Page, scenario: string) {
   await page.route('**/api/ec/coupons/available_coupons', async route => {
     if (scenario === 'empty') {
+      // 回傳空資料，模擬沒有可用優惠券
       await route.fulfill({ json: { data: [] } });
     } else if (scenario === 'timeout') {
+      // 延遲 30 秒，模擬 API timeout
       await new Promise(resolve => setTimeout(resolve, 30000));
     } else if (scenario === 'error') {
+      // 回傳 500 錯誤，模擬伺服器異常
       await route.fulfill({ status: 500 });
     } else {
+      // 其他情境，正常通過
       await route.continue();
     }
   });
