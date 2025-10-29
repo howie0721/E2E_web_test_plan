@@ -29,18 +29,10 @@
 dogcatstar_E2E_test_plan/
 ├── docs/                                      # 文件資料夾
 │   ├── api_test_plan/                         # API 測試計畫
-│   │   ├── cart-api-test.md
-│   │   └── login-api-test.md
 │   ├── Challenge/                             # 專案挑戰與解決方案
-│   │   ├── ai-collab-plan.md
-│   │   ├── blackbox-test-plan.md
-│   │   ├── cart-coupon-test-plan.md
-│   │   └── e2e-stubbing-plan.md
 │   ├── Test_System_Architecture/              # 測試系統架構文件
-│   │   ├── Project_Architecture.md
-│   │   ├── Test_Plan.md
-│   │   └── testcases.md
-│   └── Task.md
+│   ├── Task.md
+│   └── Dogcatstar-E2E_test_plan.pptx
 ├── fixtures/                                  # 測試資料與認證狀態
 │   ├── authStorageState.json.example
 │   ├── api-tokens.json.example
@@ -63,7 +55,6 @@ dogcatstar_E2E_test_plan/
 │   │   │   │   ├── TC-CART-API-003-cart-calculate.spec.ts
 │   │   │   │   ├── TC-CART-API-004-guest-discount.spec.ts
 │   │   │   │   ├── TC-CART-API-005-available-coupons.spec.ts
-│   │   │   │   ├── TC-CART-API-006-checkout-fields.spec.ts
 │   │   │   │   ├── TC-CART-API-007-user-address.spec.ts
 │   │   │   │   └── TC-CART-API-008-complete-flow.spec.ts
 │   │   │   └── login/                         # 登入 API 測試
