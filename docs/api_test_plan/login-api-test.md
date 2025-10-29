@@ -1,7 +1,11 @@
-# 登入 API 測試文件（無痕模式流程）
+# 登入 API 測試文件
 
 ## 測試流程說明
-此文件記錄「無痕模式」下的完整登入流程，從訪客頁面到完成 OTP 登入的所有 API 互動：
+此文件記錄完整的登入流程，從訪客頁面到完成 OTP 登入的所有 API 互動。
+
+**測試範圍**: 涵蓋訪客模式與會員模式的 API 互動流程。
+
+**主要流程步驟**：
 1. 進入訪客會員中心頁面 (visitor-my-account)
 2. 輸入手機號碼，發送 OTP
 3. 輸入 OTP 驗證碼
@@ -239,7 +243,7 @@ referer: https://www.dogcatstar.com/visitor-my-account
 
 **規則**:
 - 用於登入頁面判斷要顯示「登入」或「註冊」
-- 無痕模式下也可查詢
+- 訪客模式下也可查詢
 - 不洩漏用戶敏感資訊
 
 **預期回應**:
@@ -770,7 +774,7 @@ test('TC-LOGIN-API-006: 取得登入用戶資訊', async ({ request }) => {
 
 **測試步驟**:
 ```typescript
-test('TC-LOGIN-API-007: 完整登入流程（無痕模式）', async ({ request }) => {
+test('TC-LOGIN-API-007: 完整登入流程', async ({ request }) => {
   // Step 1: 檢查手機號碼是否已註冊
   const registeredRes = await request.get(
     'https://www.dogcatstar.com/dni/mu/user/registered',
@@ -1186,6 +1190,6 @@ console.log('帳號:', data.account);
 ---
 
 **撰寫**: GitHub Copilot  
-**最後更新**: 2025-10-28  
-**版本**: 1.0  
-**資料來源**: www.dogcatstar.com_login_headless.har
+**最後更新**: 2025-10-29  
+**版本**: 1.1  
+**資料來源**: 登入流程 HAR 檔案分析（訪客與會員模式）

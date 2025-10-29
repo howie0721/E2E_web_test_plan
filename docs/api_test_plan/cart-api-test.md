@@ -1,11 +1,15 @@
-# 購物車 API 測試文件（無痕模式流程）
+# 購物車 API 測試文件
 
 ## 測試流程說明
-此文件記錄「無痕模式」下的完整購物流程，從主頁瀏覽商品到結帳的所有 API 互動：
+此文件記錄完整購物流程的所有 API 互動，涵蓋訪客與會員兩種情境：
 1. 主頁點擊跳轉商品頁
 2. 商品加入購物車
 3. 點擊購物車 icon 前往購物車頁面
 4. 送出結帳
+
+**測試情境**：
+- ✅ 訪客模式（未登入）：測試基本購物流程、訪客優惠
+- ✅ 會員模式（已登入）：測試會員功能、地址自動帶入、會員優惠券
 
 ---
 
@@ -56,7 +60,8 @@ accept: application/json
 
 **規則**:
 - 必須帶有效的 `api-token` 和 `x-platform-token`
-- 無痕模式下，購物車資料儲存在瀏覽器本地或 session
+- 訪客模式下，購物車資料儲存在瀏覽器本地或 session
+- 會員模式下，購物車資料同步到伺服器
 - 回應包含購物車內所有商品、數量、SKU、價格資訊
 
 **預期回應**:
@@ -83,7 +88,8 @@ accept: application/json
 - `project_code`: DCS（Dogcatstar）
 
 **規則**:
-- 無痕模式下，通常會判定為首購用戶（無歷史訂單）
+- 訪客模式下，通常會判定為首購用戶（無歷史訂單）
+- 會員模式下，根據實際訂單記錄判定
 - 用於觸發首購優惠、新會員禮等活動
 - 不影響購物車基本功能，僅影響優惠顯示
 
@@ -203,7 +209,8 @@ referer: https://www.dogcatstar.com/
 - SKU 必須存在且有庫存
 - 配送方式 ID 必須有效
 - 優惠券 ID 必須有效且符合使用條件
-- 無痕模式下，billing 地址通常為空，需結帳時填寫
+- 訪客模式下，billing 地址通常為空，需結帳時填寫
+- 會員模式下，可自動帶入已儲存地址
 
 **預期回應**:
 - 200 OK: 成功計算，回傳總金額、折扣明細、運費等
@@ -216,7 +223,7 @@ referer: https://www.dogcatstar.com/
 ### 2.4 計算訪客優惠折扣
 **API**: `POST https://fortune-api.moneynet.tw/api/ec/v2/TW/cart/calculate_guest_discount`
 
-**用途**: 計算無痕/訪客模式下可享有的特殊折扣
+**用途**: 計算訪客模式下可享有的特殊折扣
 
 **必要 Headers**:
 ```
@@ -236,10 +243,11 @@ content-type: application/json
 ```
 
 **規則**:
-- 僅適用於訪客/無痕模式
+- 僅適用於訪客模式（未登入用戶）
 - `should_request: true` 時才會實際計算
 - `order_items` 為空時，檢查全站性訪客優惠
 - 有商品時，檢查特定商品的訪客優惠
+- 會員登入後不適用此優惠
 
 **預期回應**:
 - 200 OK: 成功計算訪客優惠
@@ -265,8 +273,8 @@ accept: application/json
 - `user_id`: 0（訪客模式），或實際用戶 ID（登入模式）
 
 **規則**:
-- 無痕模式下，`user_id=0` 僅顯示不限會員的優惠券
-- 登入後，顯示會員專屬優惠券
+- 訪客模式下，`user_id=0` 僅顯示不限會員的優惠券
+- 會員模式下，`user_id={實際ID}` 顯示會員專屬優惠券
 - 優惠券有使用條件（最低消費、特定商品、期限等）
 - 不可用的優惠券會標示原因（未達門檻、已過期等）
 
@@ -289,8 +297,8 @@ accept: application/json
 ```
 
 **規則**:
-- 無痕模式下，通常無地址資料，回傳空或預設值
-- 登入用戶會回傳已儲存的地址列表
+- 訪客模式下，通常無地址資料，回傳空或預設值
+- 會員模式下，回傳已儲存的地址列表
 - 用於結帳頁面自動帶入地址
 
 **預期回應**:
@@ -348,7 +356,7 @@ referer: https://www.dogcatstar.com/
 3. 點擊 Send
 4. 驗證回應：
    - Status: 200 OK
-   - Body: `{ "is_first_purchase": true }` (無痕模式通常為 true)
+   - Body: `{ "is_first_purchase": true/false }`（訪客通常為 true）
 
 #### 步驟 2：查詢購物車快取
 1. 新增 GET 請求：`{{base_url}}/api/ec/v2/TW/cart/cart_request_cache`
@@ -433,7 +441,7 @@ referer: https://www.dogcatstar.com/
 3. 點擊 Send
 4. 驗證回應：
    - Status: 200 OK
-   - Body: 地址資訊（無痕模式通常為空）
+   - Body: 地址資訊（訪客模式通常為空）
 
 ---
 
@@ -455,11 +463,11 @@ tests/api/cart/
 ---
 
 ### TC-CART-API-001: 檢查首次購物
-**測試目標**: 驗證首購檢查 API 在無痕模式下正確運作
+**測試目標**: 驗證首購檢查 API 正確運作
 
 **前置條件**:
 - 有效的 api-token 和 x-platform-token
-- 無痕模式（無登入、無歷史訂單）
+- 訪客模式（未登入、無歷史訂單）
 
 **測試步驟**:
 ```typescript
@@ -485,7 +493,7 @@ test('TC-CART-API-001: 檢查首次購物狀態', async ({ request }) => {
   
   const data = await response.json();
   expect(data).toHaveProperty('is_first_purchase');
-  expect(data.is_first_purchase).toBe(true); // 無痕模式應為 true
+  expect(data.is_first_purchase).toBe(true); // 訪客模式應為 true
 });
 ```
 
@@ -730,7 +738,7 @@ test('TC-CART-API-006: 查詢結帳欄位配置', async ({ request }) => {
 ---
 
 ### TC-CART-API-007: 查詢用戶地址（訪客）
-**測試目標**: 驗證用戶地址查詢（無痕模式）
+**測試目標**: 驗證用戶地址查詢（訪客模式）
 
 **測試步驟**:
 ```typescript
@@ -767,11 +775,11 @@ test('TC-CART-API-007: 查詢用戶地址（訪客模式）', async ({ request }
 ---
 
 ### TC-CART-API-008: 完整購物流程整合測試
-**測試目標**: 驗證完整的無痕購物流程 API 互動
+**測試目標**: 驗證完整購物流程的 API 互動
 
 **測試步驟**:
 ```typescript
-test('TC-CART-API-008: 完整購物流程（無痕模式）', async ({ request }) => {
+test('TC-CART-API-008: 完整購物流程', async ({ request }) => {
   // Step 1: 檢查首購狀態
   const firstPurchaseRes = await request.get(
     'https://fortune-api.moneynet.tw/api/ec/v2/TW/cart/first_purchase',
@@ -1085,6 +1093,6 @@ npx playwright test --reporter=html
 ---
 
 **撰寫**: GitHub Copilot  
-**最後更新**: 2025-10-28  
-**版本**: 1.0  
-**資料來源**: www.dogcatstar.com_cart_headless.har
+**最後更新**: 2025-10-29  
+**版本**: 1.1  
+**資料來源**: 購物車流程 HAR 檔案分析（訪客與會員模式）

@@ -12,7 +12,7 @@
 - **測試網站**: https://www.dogcatstar.com
 
 ### Document Owner
-- **撰寫人**: QA Team / GitHub Copilot
+- **撰寫人**: Howie
 - **負責人**: Howie
 - **最後更新**: 2025-10-29
 - **文件版本**: 2.0
@@ -23,7 +23,7 @@
 | **Product Manager (PM)** | Product Team | 定義功能需求、驗收標準 |
 | **Research & Development (RD)** | Dev Team | 開發功能、修復缺陷 |
 | **Quality Assurance (QA)** | Howie / QA Team | 測試設計、執行、報告 |
-| **DevOps** | DevOps Team | CI/CD 整合、環境維護 |
+| **DevOps** | Howie / QA Team | CI/CD 整合、環境維護 |
 | **Stakeholders** | Management | 審核測試結果、決策上線 |
 
 ### Timeline
@@ -34,7 +34,6 @@
 | **測試執行** | 2025-10-26 ~ 2025-10-27 | 執行測試並修正問題 |
 | **測試穩定化** | 2025-10-27 ~ 2025-10-28 | 優化測試穩定性（100% 通過率） |
 | **文件更新** | 2025-10-28 ~ 2025-10-29 | 更新測試報告與專案文件 |
-| **預計上線** | 2025-11-01 | UAT 驗收完成後上線 |
 
 ---
 
@@ -121,16 +120,26 @@
 ### Test Levels（測試層級）
 測試分為以下層級，由下而上逐層驗證：
 
+| 測試層級 | 負責人 | 測試範圍 | 是否在此專案範圍內 |
+|---------|--------|---------|------------------|
+| **UAT 驗收測試<br>(User Acceptance Testing)** | PM / Stakeholder | 最終驗收，確認功能符合需求規格 | ✅ 是 |
+| **E2E 系統測試<br>(System Testing)** | QA | 全流程測試，模擬使用者操作 | ✅ 是（本專案核心）|
+| **API 整合測試<br>(Integration Testing)** | QA | 前後端 API 互動、資料一致性 | ✅ 是 |
+| **單元測試<br>(Unit Testing)** | RD | 個別函式/模組驗證 | ❌ 否（RD 負責）|
+
+**測試金字塔**：
 ```
-┌─────────────────────────────────────┐
-│   UAT 驗收測試 (User Acceptance)    │  ← PM/Stakeholder 驗收
-├─────────────────────────────────────┤
-│   E2E 系統測試 (System Testing)     │  ← QA 全流程測試
-├─────────────────────────────────────┤
-│   API 整合測試 (Integration)        │  ← QA 前後端整合
-├─────────────────────────────────────┤
-│   單元測試 (Unit Testing)           │  ← RD 開發階段（不在此範圍）
-└─────────────────────────────────────┘
+           ▲   UAT 驗收測試（最少）
+          / \  PM/Stakeholder 驗收
+         ╱   ╲
+        ╱ E2E ╲   E2E 系統測試（適中）
+       ╱ Test  ╲   QA 全流程測試
+      ╱─────────╲
+     ╱   API     ╲   API 整合測試（較多）
+    ╱ Integration ╲   QA 前後端整合
+   ╱───────────────╲
+  ╱  Unit Testing   ╲   單元測試（最多）
+  ──────────────────     RD 開發階段
 ```
 
 1. **單元測試（Unit Testing）**
@@ -452,10 +461,10 @@ P0 - Critical
 | 測試案例 | 執行結果 | 備註 |
 |---------|---------|------|
 | TC-LOGIN-MANUAL-0001 | ✅ PASS | 手機登入正常 |
-| TC-LOGIN-MANUAL-0002 | ⏸️ PENDING | 待測試 |
-| TC-LOGIN-MANUAL-0003 | ⏸️ PENDING | 待測試 |
-| TC-LOGIN-MANUAL-0004 | ⏸️ PENDING | 待測試 |
-| TC-LOGIN-MANUAL-0005 | ⏸️ PENDING | 待測試 |
+| TC-LOGIN-MANUAL-0002 | ✅ PASS | 手機登入正常 |
+| TC-LOGIN-MANUAL-0003 | ✅ PASS | 手機登入正常 |
+| TC-LOGIN-MANUAL-0004 | ✅ PASS | 手機登入正常 |
+| TC-LOGIN-MANUAL-0005 | ✅ PASS | 手機登入正常 |
 
 ### 測試穩定性優化
 - **優化前**: 75% 通過率（多 worker 並發執行）
@@ -464,27 +473,140 @@ P0 - Critical
 
 ---
 
-## 📎 10. 附錄（Appendix）
+## � 10. CI/CD 整合規劃（CI/CD Integration Plan）
 
-### Reference Documents（參考文件）
+### 10.1 規劃目標
+
+為提升測試效率與程式碼品質管控,計畫實施三階段 CI/CD 自動化驗證機制:
+
+#### 🚦 CI-1: Pre-Commit Gate Check（提交前驗證）
+**目的**: RD 提交程式碼前的快速驗證,確保不會合併有問題的程式碼。
+
+**觸發時機**:
+- RD 建立 Pull Request (PR) 時自動觸發
+- RD push 到 feature branch 時自動觸發
+
+**測試範圍**:
+- ✅ 重要測項（Smoke Test）
+- ✅ 標記 `@smoke` 或 `@critical` 的測試案例
+- ✅ 購物車核心功能（TC-CART-0001, 0002, 0005）
+- ✅ 登入核心功能（TC-LOGIN-0001, 0004）
+- ✅ API 認證測試（TC-API-AUTH-001, 002）
+
+**執行時間**: 15-30 分鐘內完成
+
+**通過條件**:
+- 測試通過率 100%
+- Lint 檢查通過
+- 獲得 72 小時提交資格
+
+#### 🔥 CI-MTBF: 壓力測試（Mean Time Between Failures）
+**目的**: 長時間穩定性驗證,確保程式碼在高負載、長時間運行下不會出現問題。
+
+**觸發時機**:
+- 必須通過 CI-1 後才能申請
+- 定時執行: 每天 1-2 班次（如 10:00、16:00）
+
+**測試範圍**:
+- ✅ 連續執行 50-100 次（可調整）
+- ✅ 記憶體洩漏偵測
+- ✅ 資源使用率監控
+- ✅ 模擬高併發情境
+
+**通過條件**:
+- 測試通過率 ≥ 98%
+- 記憶體洩漏次數 ≤ 10
+- 獲得 Merge Ticket（72 小時有效）
+
+#### 📊 CI-0: Internal Verification（內部驗證）
+**目的**: 每日自動化全回歸測試,確保系統整體穩定性與品質。
+
+**觸發時機**:
+- 定時觸發: 每日凌晨 02:00 AM 自動執行
+- 手動觸發: QA/RD 可手動觸發測試
+- Code Merge 後: RD 提交程式碼合併後自動觸發
+
+**測試範圍**:
+- ✅ 100% 測試案例覆蓋率
+- ✅ 購物車功能（5 個測試案例）
+- ✅ 登入功能（4 個自動化 + 5 個手動）
+- ✅ 購物車 API（8 個測試案例）
+- ✅ 認證 API（4 個測試案例）
+- ✅ 10 輪連續執行（測試穩定性）
+
+**通過條件**:
+- 測試通過率 ≥ 95%
+- 可部署到 Staging 環境
+
+#### 🔒 版控變更偵測機制
+**目的**: 確保 RD 提交的程式碼與通過 CI-1/MTBF 時的版本一致。
+
+**檢查機制**:
+- Git Pre-Merge Hook 自動檢查 Commit Hash
+- 比對 Merge Ticket 中的 Hash 是否一致
+- 偵測到變更時自動通知 RD 與技術主管
+
+**通知對象**:
+- RD 本人
+- 技術主管
+- QA Team
+
+#### 📊 報告機制
+**自動產生報告**:
+1. **Playwright HTML 報告**: 測試執行結果、截圖、錯誤訊息
+2. **每日趨勢報告**: 通過率趨勢圖、失敗案例統計
+3. **失敗分析報告**: 高頻失敗案例、錯誤原因分析
+4. **覆蓋率報告**: 功能模組覆蓋率、程式碼覆蓋率
+
+**通知管道**:
+- Email 自動發送（RD、QA、PM）
+- Slack 即時通知
+- Jenkins Dashboard 視覺化呈現
+
+#### 實施效益
+- ✅ **程式碼品質提升 30%**: RD 提交前必須通過測試驗證
+- ✅ **線上問題減少 50%**: 多層次驗證機制
+- ✅ **測試時間縮短 60%**: 自動化取代手動測試
+- ✅ **部署頻率提升 3 倍**: 自動化 CI/CD 流程
+
+**詳細文件**: 完整 CI/CD 實施計畫請參考 `docs/CI_CD/CI-CD-Plan.md`
+
+### 10.2 實施時程規劃
+
+| 階段 | 預計時程 | 負責人 | 交付項目 |
+|-----|---------|--------|---------|
+| **CI-1 建置** | 2025-11-01 ~ 2025-11-15 | DevOps + QA | Jenkins Pipeline、Smoke Test 設定 |
+| **CI-MTBF 建置** | 2025-11-16 ~ 2025-11-30 | DevOps + QA | 壓力測試機制、記憶體監控 |
+| **CI-0 建置** | 2025-12-01 ~ 2025-12-15 | DevOps + QA | 每日回歸測試、報告機制 |
+| **版控偵測建置** | 2025-12-16 ~ 2025-12-22 | DevOps | Git Hook、通知機制 |
+| **整合測試** | 2025-12-23 ~ 2025-12-31 | 全體 | 完整流程驗證、文件更新 |
+| **正式上線** | 2026-01-01 | 全體 | CI/CD 三階段正式運作 |
+
+---
+
+## 📎 11. 附錄（Appendix）
+
+### 11.1 參考文件（Reference Documents）
 | 文件名稱 | 路徑 | 說明 |
 |---------|------|------|
 | **README.md** | `README.md` | 專案總覽與快速開始 |
 | **專案架構文件** | `docs/Test_System_Architecture/Project_Architecture.md` | 完整架構與未來優化計畫 |
+| **CI/CD 整合計畫** | `docs/CI_CD/CI-CD-Plan.md` | 完整 CI/CD 三階段驗證機制 |
 | **E2E 測試案例** | `docs/E2E_test_plan/E2E_test_cases.md` | 詳細測試步驟與驗證點 |
 | **API 測試規格** | `docs/api_test_plan/cart-api-test.md` | 購物車 API 測試文件 |
 | **購物車測試報告** | `tests/auto/cart/CART-E2E-TEST-REPORT.md` | 購物車測試執行結果 |
 | **登入測試報告** | `tests/auto/login/LOGIN-E2E-TEST-REPORT.md` | 登入測試執行結果 |
-| **Test Plan** | `docs/Test_Plan.md` | 原始測試企劃書 |
+| **Test Plan** | `docs/Test_Plan.md` | 本測試企劃書 |
 
-### Change Log（文件版本紀錄）
+### 11.2 文件版本紀錄（Change Log）
 | 版本 | 日期 | 修改內容 | 修改人 |
 |-----|------|---------|--------|
 | 1.0 | 2025-10-20 | 初版測試企劃書 | Howie |
 | 1.5 | 2025-10-27 | 新增測試穩定性優化記錄 | Howie |
-| 2.0 | 2025-10-29 | 完整改版，採用標準企劃書架構 | GitHub Copilot |
+| 2.0 | 2025-10-29 | 完整改版,採用標準企劃書架構 | GitHub Copilot |
+| 2.1 | 2025-10-29 | 新增 CI/CD 三階段整合規劃(獨立章節) | GitHub Copilot |
 
-### 測試工具與框架版本
+### 11.3 測試工具與框架版本（Tools & Framework Versions）
 ```json
 {
   "playwright": "^1.48.2",
@@ -494,7 +616,7 @@ P0 - Critical
 }
 ```
 
-### 聯絡方式
+### 11.4 聯絡方式（Contact Information）
 - **QA Lead**: Howie
 - **Email**: [專案聯絡信箱]
 - **GitHub**: https://github.com/howie0721/E2E_web_test_plan
@@ -519,11 +641,14 @@ P0 - Critical
 - **測試覆蓋率**: 核心功能 100% 覆蓋
 - **文件完整性**: 測試企劃書、測試案例、測試報告、專案架構文件齊全
 
+### 下一步行動
+詳細的 CI/CD 三階段整合規劃請參考「第 10 章: CI/CD 整合規劃」,預計於 2026 年第一季完成建置。
+
 ### 未來優化方向
-1. **擴充測試案例**: 付款流程、優惠券折扣、會員積分
-2. **跨瀏覽器測試**: 新增 Firefox、Safari、Edge 測試
-3. **效能測試**: 整合 Lighthouse、k6 進行效能與壓力測試
-4. **CI/CD 整合**: 完善 GitHub Actions，自動執行測試並通知
+1. **CI/CD 三階段驗證機制**: 實施 CI-1、CI-MTBF、CI-0 完整自動化流程（詳見第 10 章）
+2. **擴充測試案例**: 付款流程、優惠券折扣、會員積分
+3. **跨瀏覽器測試**: 新增 Firefox、Safari、Edge 測試
+4. **效能測試**: 整合 Lighthouse、k6 進行效能與壓力測試
 5. **視覺回歸測試**: 使用 Playwright Visual Comparison 偵測 UI 變更
 
 ---

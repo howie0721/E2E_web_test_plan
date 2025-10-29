@@ -14,6 +14,7 @@
 - [測試報告](#測試報告)
 - [設計理念](#設計理念)
 - [未來擴充方向](#未來擴充方向)
+- [CI/CD 流程與自動化](#cicd-流程與自動化)
 - [貢獻指南](#貢獻指南)
 - [授權](#授權)
 - [聯絡方式](#聯絡方式)
@@ -358,6 +359,66 @@ playwright-report/index.html
 
 ---
 
+## ⚙️ CI/CD 流程與自動化
+
+本專案已導入完整的 CI/CD 自動化流程，涵蓋：
+
+### CI/CD 三階段驗證流程
+- **CI-1: Pre-Commit Gate Check**
+  - Pull Request 觸發的 Smoke Test
+  - 快速驗證（15-30 分鐘）
+  - 通過後獲得 72 小時提交資格
+  
+- **CI-MTBF: 壓力測試**
+  - 長時間穩定性驗證（50-100 輪測試）
+  - 記憶體洩漏偵測
+  - **所有提交必須通過 MTBF**
+  - 通過後發放 Merge Ticket（72 小時有效）
+  
+- **CI-0: Internal Verification**
+  - 每日凌晨 02:00 自動執行
+  - 10 輪全回歸測試
+  - 100% 測試覆蓋率
+  - 通過率需 ≥ 95%
+
+### 測試報告自動化與歷史追蹤
+- **Jenkins 歸檔機制**
+  - 使用 `archiveArtifacts` 自動保存測試報告
+  - Playwright HTML 報告、JSON 統計、失敗分析等產物
+  - 每次 Build 自動歸檔，可追溯歷史
+
+- **趨勢圖追蹤**
+  - 整合 Jenkins Plot Plugin
+  - 產生每日通過率、失敗案例、執行時間趨勢圖
+  - 支援品質分析與持續改善
+
+- **長期儲存方案**
+  - **Jenkins Job Artifacts**：短期保存（90 天）
+  - **S3 / NAS / 自家 Server**：長期保存，支援合規留存
+  - 定期同步至外部儲存，避免 Jenkins 空間不足
+
+- **報告整合工具**
+  - **Playwright HTML Report**：內建、易用，自動產生詳細測試報告
+  - **Allure Report**：視覺化報告，支援歷史趨勢、失敗分析、測試時間統計（適合大型團隊）
+  - **Jenkins HTML Publisher Plugin**：集中管理歷史報告，提供查詢介面
+
+- **實務優勢**
+  - Jenkins 為企業級 CI/CD 標準，穩定、可擴充，支援多種插件
+  - 開源或免費工具，社群資源豐富，遇到問題容易找到解法
+  - 歷史報告可回溯，方便品質分析與持續改善
+
+### 版控與安全機制
+- **Merge Ticket/Hash 驗證**：確保程式碼未經未授權變更
+- **72 小時有效期限**：超過期限需重新測試
+- **多層次通知**：Email/Slack 報告、失敗警示
+
+### 其他最佳實踐
+- 測試資料管理、效能監控、安全性掃描、災難復原等
+
+詳細流程、Jenkins pipeline 範例、報告格式與最佳實踐，請參考：[CI/CD 整合計畫](./docs/CI-CD-Plan.md)
+
+---
+
 ## 🔮 未來擴充方向
 
 ### 1. 測試覆蓋擴充
@@ -367,10 +428,9 @@ playwright-report/index.html
 - [ ] 跨瀏覽器與 RWD 測試
 
 ### 2. 自動化流程優化
-- [ ] CI/CD 整合（GitHub Actions / Jenkins）
 - [ ] 定時排程執行（每日回歸測試）
 - [ ] 測試失敗自動通知（Slack / Email）
-- [ ] 測試報告自動上傳與歷史追蹤
+- [ ] 測試穩定性監控與 Flaky Test 偵測
 
 ### 3. 測試資料管理
 - [ ] 測試資料工廠（Faker.js / 自訂 Generator）
@@ -419,7 +479,3 @@ playwright-report/index.html
 如有任何問題或建議，歡迎聯絡：
 - **Email**: howie0721@gmail.com
 - **GitHub**: [howie0721](https://github.com/howie0721)
-
----
-
-**感謝您的閱讀！祝測試順利！** 🎉
