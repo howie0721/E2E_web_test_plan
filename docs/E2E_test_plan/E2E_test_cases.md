@@ -613,7 +613,12 @@ npx playwright show-report
 - **單一 Worker 執行**：使用 `--workers=1` 避免並發衝突
 - **Timeout 設定**：每個測試 timeout 設為 120 秒
 - **Retry 機制**：失敗時自動重試 4 次（`--retries=4`）
-- **等待機制**：Email 輸入後加入 0.5 秒等待，確保 UI 同步
+- **等待策略**：採用多種等待機制確保測試穩定性
+  - `waitForSelector`：等待特定元素出現或消失
+  - `waitForLoadState`：等待頁面載入完成（'networkidle'）
+  - `waitForResponse`：等待特定 API 回應完成
+  - `waitForTimeout`：針對資料載入速度不固定的情境，適度使用強制等待（如 500ms）確保 UI 同步
+  - 自動關閉彈窗機制：避免廣告彈窗干擾測試執行
 
 ### 4.3 測試覆蓋率目標
 - **購物車功能覆蓋率**: 100%（5/5 測試案例）
