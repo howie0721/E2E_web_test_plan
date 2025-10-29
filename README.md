@@ -38,9 +38,8 @@ dogcatstar_E2E_test_plan/
 │   │   └── e2e-stubbing-plan.md
 │   ├── Test_System_Architecture/              # 測試系統架構文件
 │   │   ├── Project_Architecture.md
-│   │   ├── Playwright_Test_Plan.md
+│   │   ├── Test_Plan.md
 │   │   └── testcases.md
-│   ├── presentation_flow.md
 │   └── Task.md
 ├── fixtures/                                  # 測試資料與認證狀態
 │   ├── authStorageState.json.example
